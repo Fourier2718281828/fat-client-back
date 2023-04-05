@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const PORT = 8000;
 const {
     saveFilm,
@@ -15,13 +16,26 @@ const {
 
 
 app.use(express.static(__dirname));
+app.use(cors());
 app.use(bodyParser.json());
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     dbSetUp();
 });
 
-app.get("/", (req, res) => res.send("Home page"));
+app.post("/login", (req, res) => {
+    console.log("Body:", req.body);
+    console.log("Body.data:", req.body.data);
+    const { login, password } = req.body.data;
+    if(login === "admin" && password === "admin")
+    {
+        res.status(200).send();
+    }
+    else
+    {
+        res.status(401).send();
+    }
+});
 
 app.post("/film", async (req, res) => {
     try {
